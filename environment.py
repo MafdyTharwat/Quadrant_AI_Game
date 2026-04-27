@@ -87,7 +87,6 @@ class ChainReactionEnv(gym.Env):
                 for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
                     nr, nc = r + dr, c + dc
                     if 0 <= nr < 5 and 0 <= nc < 5:
-                        # التعديل المطلوب: الاستحواذ على كرات الخصم وإضافة الكرة الجديدة لها
                         self.board_owners[nr, nc] = pid
                         self.board_counts[nr, nc] += 1
 
@@ -112,7 +111,6 @@ class ChainReactionEnv(gym.Env):
                     self._draw_dots(count, color, center)
 
     def _draw_dots(self, count, color, center):
-        # الرسم يدعم حتى 7 كرات أو أكثر بسبب عملية الجمع الجديدة
         if count == 1:
             pygame.draw.circle(self.screen, color, center, 12)
         elif count == 2:
@@ -123,7 +121,6 @@ class ChainReactionEnv(gym.Env):
             pygame.draw.circle(self.screen, color, (center[0]-15, center[1]+12), 10)
             pygame.draw.circle(self.screen, color, (center[0]+15, center[1]+12), 10)
         else:
-            # رسم 4 كرات كنمط أساسي لأي عدد أكبر من 3
             pygame.draw.circle(self.screen, color, (center[0]-15, center[1]-15), 9)
             pygame.draw.circle(self.screen, color, (center[0]+15, center[1]-15), 9)
             pygame.draw.circle(self.screen, color, (center[0]-15, center[1]+15), 9)
