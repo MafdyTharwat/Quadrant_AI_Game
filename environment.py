@@ -69,7 +69,7 @@ class ChainReactionEnv(gym.Env):
             to_explode = []
             for r in range(5):
                 for c in range(5):
-                    # explode squares when counts (no. balls) = 4
+                    # explode squares when counts (no. balls) >= 4
                     if self.board_counts[r, c] >= 4:
                         to_explode.append((r, c))
                         stable = False 
@@ -83,17 +83,13 @@ class ChainReactionEnv(gym.Env):
                 else:
                     self.board_owners[r, c] = pid
 
-                # disributing balls in the four directions
+                # distributing balls in the four directions
                 for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
                     nr, nc = r + dr, c + dc
                     if 0 <= nr < 5 and 0 <= nc < 5:
-                        
-                        if self.board_owners[nr, nc] != pid and self.board_owners[nr, nc] != 0:
-                            self.board_owners[nr, nc] = pid
-                            self.board_counts[nr, nc] = 1 
-                        else:
-                            self.board_owners[nr, nc] = pid
-                            self.board_counts[nr, nc] += 1
+                        # التعديل المطلوب: الاستحواذ على كرات الخصم وإضافة الكرة الجديدة لها
+                        self.board_owners[nr, nc] = pid
+                        self.board_counts[nr, nc] += 1
 
     def render(self):
         if self.screen is None:
@@ -116,6 +112,7 @@ class ChainReactionEnv(gym.Env):
                     self._draw_dots(count, color, center)
 
     def _draw_dots(self, count, color, center):
+        # الرسم يدعم حتى 7 كرات أو أكثر بسبب عملية الجمع الجديدة
         if count == 1:
             pygame.draw.circle(self.screen, color, center, 12)
         elif count == 2:
@@ -126,6 +123,7 @@ class ChainReactionEnv(gym.Env):
             pygame.draw.circle(self.screen, color, (center[0]-15, center[1]+12), 10)
             pygame.draw.circle(self.screen, color, (center[0]+15, center[1]+12), 10)
         else:
+            # رسم 4 كرات كنمط أساسي لأي عدد أكبر من 3
             pygame.draw.circle(self.screen, color, (center[0]-15, center[1]-15), 9)
             pygame.draw.circle(self.screen, color, (center[0]+15, center[1]-15), 9)
             pygame.draw.circle(self.screen, color, (center[0]-15, center[1]+15), 9)
